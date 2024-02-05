@@ -3,9 +3,10 @@
 	"package": "net.somyk.banmapcopy.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"ExampleMixin"
+		"BanMapCloningRecipe",
+		"BanMapCloningCartographyTable"
 	],
 	"injectors": {
-		"defaultRequire": 1
+		"defaultRequire": 2
 	}
 }
