@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "banmapcopy",
+	"version": "${version}",
+	"name": "BanMapCopy",
+	"description": "",
+	"authors": [
+		"somyk"
+	],
+	"contact": {
+		"sources": "https://github.com/",
+		"social": "https://telegram.me/somykOS"
+	},
+	"license": "MIT",
+	"icon": "assets/banmapcopy/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.somyk.banmapcopy.BanMapCopy"
+		],
+		"client": [
+			"net.somyk.banmapcopy.BanMapCopyClient"
+		],
+		"fabric-datagen": [
+			"net.somyk.banmapcopy.BanMapCopyDataGenerator"
+		]
+	},
+	"mixins": [
+		"banmapcopy.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.6",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
