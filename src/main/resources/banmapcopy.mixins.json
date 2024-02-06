@@ -1,12 +1,13 @@
 {
-	"required": true,
-	"package": "net.somyk.banmapcopy.mixin",
-	"compatibilityLevel": "JAVA_17",
-	"mixins": [
-		"BanMapCloningRecipe",
-		"BanMapCloningCartographyTable"
-	],
-	"injectors": {
-		"defaultRequire": 2
+  "required": true,
+  "package": "net.somyk.banmapcopy.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "CartographyTableMixin",
+    "EmptyMapItemMixin",
+    "MapCloningRecipeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }

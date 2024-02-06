@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(targets = "net.minecraft.screen.CartographyTableScreenHandler$4")
-public class BanMapCloningCartographyTable {
+public class CartographyTableMixin {
 	@Inject(method = "canInsert", at = @At("RETURN"), cancellable = true)
 	public void canInsert(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
 		boolean bl = stack.isOf(Items.PAPER) || stack.isOf(Items.GLASS_PANE);
