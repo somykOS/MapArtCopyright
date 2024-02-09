@@ -3,7 +3,9 @@
   "package": "net.somyk.banmapcopy.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "CartographyTableMixin",
+    "CartographyTableScreenHandler$4Mixin",
+    "CartographyTableScreenHandler$5Mixin",
+    "CartographyTableScreenHandlerMixin",
     "EmptyMapItemMixin",
     "MapCloningRecipeMixin"
   ],

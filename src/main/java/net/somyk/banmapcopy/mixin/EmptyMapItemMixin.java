@@ -15,7 +15,7 @@ public class EmptyMapItemMixin {
     @ModifyExpressionValue(method = "use", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/item/FilledMapItem;createMap(Lnet/minecraft/world/World;IIBZZ)Lnet/minecraft/item/ItemStack;"))
     public ItemStack addAuthorNBT(ItemStack original, World world, PlayerEntity user, Hand hand){
-        original.getOrCreateNbt().putString("author", user.getGameProfile().getName());
+        original.getOrCreateNbt().putString("author", user.getEntityName());
         return original;
     }
 
