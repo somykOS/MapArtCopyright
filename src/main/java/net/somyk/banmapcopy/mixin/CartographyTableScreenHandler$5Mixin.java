@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(targets = "net/minecraft/screen/CartographyTableScreenHandler$5")
 public class CartographyTableScreenHandler$5Mixin {
 
+    // Gets empty bucket after a player takes an empty map
     @WrapOperation(method = "onTakeItem", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/screen/slot/Slot;takeStack(I)Lnet/minecraft/item/ItemStack;", ordinal = 1))
     private ItemStack setEmptyBucket(Slot instance, int amount, Operation<ItemStack> original){

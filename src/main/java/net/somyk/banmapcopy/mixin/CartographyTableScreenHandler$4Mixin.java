@@ -13,6 +13,7 @@ public class CartographyTableScreenHandler$4Mixin {
     @Unique
     private boolean cleanMap = true;
 
+    // Added water bucket to cartography table
     @ModifyReturnValue(method = "canInsert", at = @At("RETURN"))
     private boolean canInsert(boolean original, ItemStack stack) {
         return original || (cleanMap && stack.isOf(Items.WATER_BUCKET));
