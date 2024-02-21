@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+import net.somyk.banmapcopy.util.ModConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -18,13 +19,15 @@ public class EmptyMapItemMixin {
     // Adding player name as author NBT
     @ModifyExpressionValue(method = "use", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/item/FilledMapItem;createMap(Lnet/minecraft/world/World;IIBZZ)Lnet/minecraft/item/ItemStack;"))
-    public ItemStack addAuthorNBT(ItemStack original, World world, PlayerEntity user, Hand hand){
+    public ItemStack addAuthorNBT(ItemStack original, World world, PlayerEntity player, Hand hand){
+        if (!ModConfig.getValue("copyright")) return original;
+
         original.getOrCreateNbt().put("authors", new NbtList());
 
         NbtList authorsNBTList = original.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE);
 
         NbtCompound author = new NbtCompound();
-        author.putString("author", user.getEntityName());
+        author.putString("author", player.getEntityName());
 
         authorsNBTList.add(author);
         return original;

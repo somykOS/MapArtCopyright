@@ -10,6 +10,7 @@ import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.world.World;
 import net.somyk.banmapcopy.util.AuthorCheck;
+import net.somyk.banmapcopy.util.ModConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,9 +34,11 @@ public class CraftingScreenHandlerMixin {
     @ModifyExpressionValue(method = "updateResult", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/recipe/CraftingRecipe;craft(Lnet/minecraft/inventory/Inventory;Lnet/minecraft/registry/DynamicRegistryManager;)Lnet/minecraft/item/ItemStack;"))
     private static ItemStack checkAuthorNBT(ItemStack original){
-        if(original.isOf(Items.FILLED_MAP) && !AuthorCheck.authorCheck(playerEntity, original)) {
+        if(original.isOf(Items.FILLED_MAP))
+            if(!ModConfig.getValue("authorsCanCopy") || !AuthorCheck.authorCheck(playerEntity, original)) {
             return ItemStack.EMPTY;
         }
+
         return original;
     }
 }
