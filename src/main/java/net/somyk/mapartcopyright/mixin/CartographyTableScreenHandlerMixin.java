@@ -11,7 +11,6 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.CartographyTableScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.somyk.mapartcopyright.util.AuthorMethods;
-import net.somyk.mapartcopyright.util.ModConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +33,7 @@ public class CartographyTableScreenHandlerMixin {
     @ModifyExpressionValue(method = "method_17382", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/item/ItemStack;copyWithCount(I)Lnet/minecraft/item/ItemStack;", ordinal = 2))
     private ItemStack checkAuthorNBT(ItemStack original){
-        if(AuthorMethods.canCopy(original, playerEntity) && ModConfig.getBooleanValue("authorsCanCopy")) {
+        if(AuthorMethods.canCopy(original, playerEntity)) {
             return original.copyWithCount(2);
         }
         return ItemStack.EMPTY;

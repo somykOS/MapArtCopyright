@@ -17,6 +17,7 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 	maven { url 'https://jitpack.io' }
+	maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 fabricApi {
@@ -34,6 +35,9 @@ dependencies {
 
 	// Simple-Yaml config
 	include(implementation "com.github.Carleslc.Simple-YAML:Simple-Yaml:1.8.4")
+
+	// fabric-permissions-api
+	include(modImplementation('me.lucko:fabric-permissions-api:0.2-SNAPSHOT'))
 
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.

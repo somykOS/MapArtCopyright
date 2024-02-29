@@ -31,7 +31,7 @@ public class ModConfig {
         config.addDefault("copyright", true);
         config.addDefault("displayAuthors", true);
         config.addDefault("disableCopy", false);
-        config.addDefault("authorsCanCopy", false);
+        config.addDefault("authorsCanCopy", true);
         config.addDefault("authorsCanAddAuthors", false);
         config.addDefault("cleanMap", false);
 
@@ -61,6 +61,19 @@ public class ModConfig {
         }
 
         return config.getBoolean(key);
+    }
+
+    public static String getStringValue(String key){
+        Path path = (FabricLoader.getInstance().getConfigDir());
+        Path path2 = path.resolve(Paths.get("MapArtCopyright"));
+        final YamlFile config = new YamlFile((path2.resolve( "config.yml" ).toFile()).getAbsolutePath());
+        try {
+            config.loadWithComments();
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return config.getString(key);
     }
 
     public static void setValue(String key, Object newValue){

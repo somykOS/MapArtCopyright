@@ -17,21 +17,28 @@ import static net.somyk.mapartcopyright.util.ModConfig.*;
 
 public class AuthorMethods {
 
+    public static boolean isAuthor(ItemStack itemStack, PlayerEntity playerEntity){
+        NbtList authorsNBTList = itemStack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE);
+        String playerName = playerEntity.getName().getString();
+        boolean bl = false;
+
+        for (int i = 0; i < authorsNBTList.size(); i++) {
+            String authorName = authorsNBTList.getCompound(i).getString("author");
+            bl = bl || (authorName != null && authorName.equals(playerName));
+        }
+
+        return bl;
+    }
+
     public static boolean canCopy(ItemStack itemStack, PlayerEntity playerEntity){
         if(!getBooleanValue("disableCopy")){
             return true;
         }
 
-        NbtList authorsNBTList = itemStack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE);
-        String playerName = playerEntity.getName().getString();
-        boolean canCopybl = false;
-
-        for(int i = 0; i < authorsNBTList.size(); i++){
-            String authorName = authorsNBTList.getCompound(i).getString("author");
-            canCopybl = canCopybl || ( authorName != null && authorName.equals(playerName) );
-        }
-
-        return canCopybl;
+        if(getBooleanValue("authorsCanCopy")) {
+            return isAuthor(itemStack, playerEntity);
+        } else
+            return false;
     }
 
     public static void setAuthor(ItemStack itemStack, PlayerEntity playerEntity){
