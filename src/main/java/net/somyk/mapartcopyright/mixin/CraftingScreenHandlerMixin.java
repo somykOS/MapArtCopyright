@@ -1,4 +1,4 @@
-package net.somyk.banmapcopy.mixin;
+package net.somyk.mapartcopyright.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,8 +9,8 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.world.World;
-import net.somyk.banmapcopy.util.AuthorCheck;
-import net.somyk.banmapcopy.util.ModConfig;
+import net.somyk.mapartcopyright.util.AuthorMethods;
+import net.somyk.mapartcopyright.util.ModConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,7 +35,7 @@ public class CraftingScreenHandlerMixin {
             target = "Lnet/minecraft/recipe/CraftingRecipe;craft(Lnet/minecraft/inventory/Inventory;Lnet/minecraft/registry/DynamicRegistryManager;)Lnet/minecraft/item/ItemStack;"))
     private static ItemStack checkAuthorNBT(ItemStack original){
         if(original.isOf(Items.FILLED_MAP))
-            if(!ModConfig.getValue("authorsCanCopy") || !AuthorCheck.authorCheck(playerEntity, original)) {
+            if(!ModConfig.getBooleanValue("authorsCanCopy") || !AuthorMethods.canCopy(original, playerEntity)) {
             return ItemStack.EMPTY;
         }
 

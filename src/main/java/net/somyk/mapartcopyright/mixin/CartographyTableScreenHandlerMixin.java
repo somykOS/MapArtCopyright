@@ -1,4 +1,4 @@
-package net.somyk.banmapcopy.mixin;
+package net.somyk.mapartcopyright.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -10,8 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.CartographyTableScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
-import net.somyk.banmapcopy.util.AuthorCheck;
-import net.somyk.banmapcopy.util.ModConfig;
+import net.somyk.mapartcopyright.util.AuthorMethods;
+import net.somyk.mapartcopyright.util.ModConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +34,7 @@ public class CartographyTableScreenHandlerMixin {
     @ModifyExpressionValue(method = "method_17382", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/item/ItemStack;copyWithCount(I)Lnet/minecraft/item/ItemStack;", ordinal = 2))
     private ItemStack checkAuthorNBT(ItemStack original){
-        if(AuthorCheck.authorCheck(playerEntity, original) && ModConfig.getValue("authorsCanCopy")) {
+        if(AuthorMethods.canCopy(original, playerEntity) && ModConfig.getBooleanValue("authorsCanCopy")) {
             return original.copyWithCount(2);
         }
         return ItemStack.EMPTY;

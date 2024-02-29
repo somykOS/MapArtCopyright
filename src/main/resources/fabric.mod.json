@@ -1,32 +1,31 @@
 {
 	"schemaVersion": 1,
-	"id": "banmapcopy",
+	"id": "mapartcopyright",
 	"version": "${version}",
-	"name": "BanMapCopy",
+	"name": "MapArtCopyright",
 	"description": "",
 	"authors": [
 		"somyk"
 	],
 	"contact": {
-		"sources": "https://github.com/",
-		"social": "https://telegram.me/somykOS"
+		"sources": "https://github.com/somykOS/Fabric-MapArtCopyright-1.20.X",
+		"discord": "somyk"
 	},
 	"license": "MIT",
-	"icon": "assets/banmapcopy/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.somyk.banmapcopy.BanMapCopy"
+			"net.somyk.mapartcopyright.MapArtCopyright"
 		],
 		"client": [
-			"net.somyk.banmapcopy.BanMapCopyClient"
+			"net.somyk.mapartcopyright.MapArtCopyrightClient"
 		],
 		"fabric-datagen": [
-			"net.somyk.banmapcopy.BanMapCopyDataGenerator"
+			"net.somyk.mapartcopyright.MapArtCopyrightDataGenerator"
 		]
 	},
 	"mixins": [
-		"banmapcopy.mixins.json"
+      "mapartcopyright.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.15.6",

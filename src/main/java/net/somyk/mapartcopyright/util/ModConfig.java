@@ -1,4 +1,4 @@
-package net.somyk.banmapcopy.util;
+package net.somyk.mapartcopyright.util;
 
 import net.fabricmc.loader.api.FabricLoader;
 import org.simpleyaml.configuration.comments.format.YamlCommentFormat;
@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static net.somyk.banmapcopy.BanMapCopy.*;
+import static net.somyk.mapartcopyright.MapArtCopyright.*;
 
 public class ModConfig {
 
     public static void registerConfigs() {
         Path path = (FabricLoader.getInstance().getConfigDir());
-        Path path2 = path.resolve(Paths.get("BanMapCopy"));
+        Path path2 = path.resolve(Paths.get("MapArtCopyright"));
         final YamlFile config = new YamlFile((path2.resolve( "config.yml" ).toFile()).getAbsolutePath());
         try {
             if (!config.exists()) {
@@ -28,13 +28,19 @@ public class ModConfig {
             throw new RuntimeException(e);
         }
 
-        config.addDefault("copyright", false);
+        config.addDefault("copyright", true);
+        config.addDefault("displayAuthors", true);
+        config.addDefault("disableCopy", false);
         config.addDefault("authorsCanCopy", false);
+        config.addDefault("authorsCanAddAuthors", false);
         config.addDefault("cleanMap", false);
 
         config.setCommentFormat(YamlCommentFormat.PRETTY);
         config.setComment("copyright", "Adds NBT 'authors' while creating new filled map");
-        config.setComment("authorsCanCopy", "Will work if 'copyright' is/was 'true'");
+        config.setComment("displayAuthors", "Works if 'copyright' is/was 'true'");
+        config.setComment("disableCopy", "Nobody can make a copy of a map (except authors if 'authorsCanCopy' is 'true')");
+        config.setComment("authorsCanCopy", "Works if 'copyright' is/was 'true'");
+        config.setComment("authorsCanAddAuthors", "Command /newAuthor <player> works if it's true");
         config.setComment("cleanMap", "Allows to clean map with a bucket of water in a cartography table");
 
         try {
@@ -44,9 +50,9 @@ public class ModConfig {
         }
     }
 
-    public static boolean getValue(String key){
+    public static boolean getBooleanValue(String key){
         Path path = (FabricLoader.getInstance().getConfigDir());
-        Path path2 = path.resolve(Paths.get("BanMapCopy"));
+        Path path2 = path.resolve(Paths.get("MapArtCopyright"));
         final YamlFile config = new YamlFile((path2.resolve( "config.yml" ).toFile()).getAbsolutePath());
         try {
             config.loadWithComments();
@@ -59,7 +65,7 @@ public class ModConfig {
 
     public static void setValue(String key, Object newValue){
         Path path = (FabricLoader.getInstance().getConfigDir());
-        Path path2 = path.resolve(Paths.get("BanMapCopy"));
+        Path path2 = path.resolve(Paths.get("MapArtCopyright"));
         final YamlFile config = new YamlFile((path2.resolve( "config.yml" ).toFile()).getAbsolutePath());
 
         try {

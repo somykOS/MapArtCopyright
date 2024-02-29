@@ -1,8 +1,8 @@
-package net.somyk.banmapcopy.util;
+package net.somyk.mapartcopyright.util;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.somyk.banmapcopy.command.AddNewAuthorCommand;
-import net.somyk.banmapcopy.command.ChangeConfigCommand;
+import net.somyk.mapartcopyright.command.AddNewAuthorCommand;
+import net.somyk.mapartcopyright.command.ChangeConfigCommand;
 
 public class ModCommandsRegister {
     public static void registerCommands(){

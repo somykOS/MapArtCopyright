@@ -1,4 +1,4 @@
-package net.somyk.banmapcopy.mixin;
+package net.somyk.mapartcopyright.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
