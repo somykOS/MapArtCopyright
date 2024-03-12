@@ -45,7 +45,7 @@ public class AuthorMethods {
         NbtList authorsNBTList = itemStack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE);
 
         NbtCompound author = new NbtCompound();
-        author.putString("author", playerEntity.getEntityName());
+        author.putString("author", playerEntity.getName().getString());
 
         authorsNBTList.add(author);
     }
@@ -93,7 +93,7 @@ public class AuthorMethods {
 
         for (Text tline : lore) {
             tline = tline.copy().setStyle(LORE_STYLE);
-            loreItems.add(NbtString.of(Text.Serializer.toJson(tline)));
+            loreItems.add(NbtString.of(Text.Serialization.toJsonString(tline)));
         }
 
         display.put("Lore", loreItems);
