@@ -1,6 +1,5 @@
 package net.somyk.mapartcopyright.mixin;
 
-
 import net.minecraft.entity.Entity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
@@ -19,12 +18,13 @@ import java.util.Objects;
 @Mixin(FilledMapItem.class)
 public class FilledMapItemMixin {
 
+    // Checks if map has lore and config value 'displayAuthorsLore' is true or false
     @Inject(method = "inventoryTick", at = @At("TAIL"))
     private void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected, CallbackInfo ci){
-        if(ModConfig.getBooleanValue("displayAuthors") && stack.getSubNbt("display") == null
+        if(ModConfig.getBooleanValue("displayAuthorsLore") && stack.getSubNbt("display") == null
                 && !Objects.equals(stack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE), new NbtList())){
-            AuthorMethods.setLore(stack);
-        } else if (!ModConfig.getBooleanValue("displayAuthors") && stack.getSubNbt("display") != null) {
+            AuthorMethods.setAuthorDisplayLore(stack);
+        } else if (!ModConfig.getBooleanValue("displayAuthorsLore") && stack.getSubNbt("display") != null) {
             stack.removeSubNbt("display");
         }
     }

@@ -49,12 +49,12 @@ public class AddNewAuthorCommand {
         if (p.matcher(playerName).find()) {
             context.getSource().sendFeedback(() -> Text.literal("Player name should not have any special character").setStyle(style), false);
             return -1;
-        } else if(!addAuthor(itemStack, playerName)){
+        } else if(!addAuthorNBT(itemStack, playerName)){
             context.getSource().sendFeedback(() -> Text.literal("There is already the author").setStyle(style), false);
             return -1;
         }
 
-        setLore(itemStack);
+        setAuthorDisplayLore(itemStack);
 
         return 1;
     }

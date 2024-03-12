@@ -29,15 +29,14 @@ public class CraftingScreenHandlerMixin {
         playerEntity = player;
     }
 
-    // Checking author while copying map
+    // Checking if a player can copy a map
     @ModifyExpressionValue(method = "updateResult", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/recipe/CraftingRecipe;craft(Lnet/minecraft/inventory/Inventory;Lnet/minecraft/registry/DynamicRegistryManager;)Lnet/minecraft/item/ItemStack;"))
-    private static ItemStack checkAuthorNBT(ItemStack original){
+    private static ItemStack playerCanCopyCheck(ItemStack original){
         if(original.isOf(Items.FILLED_MAP))
             if(!AuthorMethods.canCopy(original, playerEntity)) {
             return ItemStack.EMPTY;
         }
-
         return original;
     }
 }

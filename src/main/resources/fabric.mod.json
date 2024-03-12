@@ -3,7 +3,7 @@
 	"id": "mapartcopyright",
 	"version": "${version}",
 	"name": "MapArtCopyright",
-	"description": "",
+	"description": "Mod adds copyright and other functionality for filled maps",
 	"authors": [
 		"somyk"
 	],
@@ -16,12 +16,6 @@
 	"entrypoints": {
 		"main": [
 			"net.somyk.mapartcopyright.MapArtCopyright"
-		],
-		"client": [
-			"net.somyk.mapartcopyright.MapArtCopyrightClient"
-		],
-		"fabric-datagen": [
-			"net.somyk.mapartcopyright.MapArtCopyrightDataGenerator"
 		]
 	},
 	"mixins": [

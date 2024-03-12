@@ -19,7 +19,7 @@ public class ChangeConfigCommand {
         Style style = Style.EMPTY.withColor(Formatting.GRAY).withItalic(true);
 
         dispatcher.register(literal(MOD_ID)
-                .requires(Permissions.require("mapartcopyright.configparameters"))
+                .requires(Permissions.require("mapartcopyright.changeconfig"))
                 .then(literal("copyright")
                         .executes(context -> {
                             context.getSource().sendFeedback(() -> Text.literal("'copyright' is '" + getStringValue("copyright") + "'").setStyle(style), false);
@@ -90,16 +90,16 @@ public class ChangeConfigCommand {
                                 })
                         )
                 )
-                .then(literal("displayAuthors")
+                .then(literal("displayAuthorsLore")
                         .executes(context -> {
-                            context.getSource().sendFeedback(() -> Text.literal("'displayAuthors' is '" + getStringValue("displayAuthors") + "'").setStyle(style), false);
+                            context.getSource().sendFeedback(() -> Text.literal("'displayAuthorsLore' is '" + getStringValue("displayAuthorsLore") + "'").setStyle(style), false);
                             return 1;
                         })
                         .then(argument("value", BoolArgumentType.bool())
                                 .executes(context -> {
                                     final boolean value = BoolArgumentType.getBool(context,"value");
-                                    setValue("displayAuthors", value);
-                                    context.getSource().sendFeedback(() -> Text.literal("'displayAuthors' set to '" + value + "'").setStyle(style), true);
+                                    setValue("displayAuthorsLore", value);
+                                    context.getSource().sendFeedback(() -> Text.literal("'displayAuthorsLore' set to '" + value + "'").setStyle(style), true);
                                     return 1;
                                 })
                         )

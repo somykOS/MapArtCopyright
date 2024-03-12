@@ -29,19 +29,19 @@ public class ModConfig {
         }
 
         config.addDefault("copyright", true);
-        config.addDefault("displayAuthors", true);
+        config.addDefault("displayAuthorsLore", true);
         config.addDefault("disableCopy", false);
         config.addDefault("authorsCanCopy", true);
-        config.addDefault("authorsCanAddAuthors", false);
+        config.addDefault("authorsCanAddAuthors", true);
         config.addDefault("cleanMap", false);
 
         config.setCommentFormat(YamlCommentFormat.PRETTY);
-        config.setComment("copyright", "Adds NBT 'authors' while creating new filled map");
-        config.setComment("displayAuthors", "Works if 'copyright' is/was 'true'");
+        config.setComment("copyright", "Adds NBT 'authors' when creating a new filled map");
+        config.setComment("displayAuthorsLore", "Works if 'copyright' is/was 'true'. Up to 5 players can be displayed in a map lore");
         config.setComment("disableCopy", "Nobody can make a copy of a map (except authors if 'authorsCanCopy' is 'true')");
         config.setComment("authorsCanCopy", "Works if 'copyright' is/was 'true'");
-        config.setComment("authorsCanAddAuthors", "Command /newAuthor <player> works if it's true");
-        config.setComment("cleanMap", "Allows to clean map with a bucket of water in a cartography table");
+        config.setComment("authorsCanAddAuthors", "Command /newAuthor <player> works if it's true, and you're one of the authors");
+        config.setComment("cleanMap", "Allows to clean a map with a bucket of water in a cartography table");
 
         try {
             config.save();

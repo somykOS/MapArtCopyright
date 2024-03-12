@@ -29,10 +29,10 @@ public class CartographyTableScreenHandlerMixin {
         this.playerEntity = inventory.player;
     }
 
-    // Checking author while copying map
+    // Checking if a player can copy a map
     @ModifyExpressionValue(method = "method_17382", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/item/ItemStack;copyWithCount(I)Lnet/minecraft/item/ItemStack;", ordinal = 2))
-    private ItemStack checkAuthorNBT(ItemStack original){
+    private ItemStack playerCanCopyCheck(ItemStack original){
         if(AuthorMethods.canCopy(original, playerEntity)) {
             return original.copyWithCount(2);
         }

@@ -34,14 +34,13 @@ public class AuthorMethods {
         if(!getBooleanValue("disableCopy")){
             return true;
         }
-
         if(getBooleanValue("authorsCanCopy")) {
             return isAuthor(itemStack, playerEntity);
         } else
             return false;
     }
 
-    public static void setAuthor(ItemStack itemStack, PlayerEntity playerEntity){
+    public static void setAuthorNBT(ItemStack itemStack, PlayerEntity playerEntity){
         itemStack.getOrCreateNbt().put("authors", new NbtList());
         NbtList authorsNBTList = itemStack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE);
 
@@ -51,8 +50,8 @@ public class AuthorMethods {
         authorsNBTList.add(author);
     }
 
-    public static void setLore(ItemStack itemStack){
-        if(!getBooleanValue("displayAuthors")) return;
+    public static void setAuthorDisplayLore(ItemStack itemStack){
+        if(!getBooleanValue("displayAuthorsLore")) return;
         int maxAuthors = 5;
 
         Style LORE_STYLE = Style.EMPTY.withColor(Formatting.GRAY).withItalic(false);
@@ -100,7 +99,7 @@ public class AuthorMethods {
         display.put("Lore", loreItems);
     }
 
-    public static boolean addAuthor(ItemStack itemStack, String playerName) {
+    public static boolean addAuthorNBT(ItemStack itemStack, String playerName) {
         NbtList authorsNBTList = itemStack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE);
         NbtCompound author = new NbtCompound();
         author.putString("author", playerName);
