@@ -45,7 +45,7 @@ public class AuthorMethods {
         NbtList authorsNBTList = itemStack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE);
 
         NbtCompound author = new NbtCompound();
-        author.putString("author", playerEntity.getEntityName());
+        author.putString("author", playerEntity.getName().getString());
 
         authorsNBTList.add(author);
     }
