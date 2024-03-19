@@ -20,14 +20,9 @@ public class AuthorMethods {
     public static boolean isAuthor(ItemStack itemStack, PlayerEntity playerEntity){
         NbtList authorsNBTList = itemStack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE);
         String playerName = playerEntity.getName().getString();
-        boolean bl = false;
-
-        for (int i = 0; i < authorsNBTList.size(); i++) {
-            String authorName = authorsNBTList.getCompound(i).getString("author");
-            bl = bl || (authorName != null && authorName.equals(playerName));
-        }
-
-        return bl;
+        NbtCompound author = new NbtCompound();
+        author.putString("author", playerName);
+        return authorsNBTList.contains(author);
     }
 
     public static boolean canCopy(ItemStack itemStack, PlayerEntity playerEntity){
@@ -99,20 +94,25 @@ public class AuthorMethods {
         display.put("Lore", loreItems);
     }
 
-    public static boolean addAuthorNBT(ItemStack itemStack, String playerName) {
+    public static boolean modifyAuthorNBT(ItemStack itemStack, String playerName, int operation) {
         NbtList authorsNBTList = itemStack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE);
         NbtCompound author = new NbtCompound();
         author.putString("author", playerName);
 
-        for (int i = 0; i < authorsNBTList.size(); i++) {
-            String authorName = authorsNBTList.getCompound(i).getString("author");
-            if (authorName!=null && authorName.equals(playerName)) {
-                // There is already the author
-                return false;
+        if (operation == 1 && !authorsNBTList.contains(author)) {
+            if(authorsNBTList.isEmpty()){
+                itemStack.getOrCreateNbt().put("authors", new NbtList());
+                authorsNBTList = itemStack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE);
             }
+            authorsNBTList.add(author);
+            return true;
+        } else if (operation == 0 && authorsNBTList.contains(author)) {
+            authorsNBTList.remove(author);
+            if (authorsNBTList.isEmpty()) {
+                itemStack.getOrCreateNbt().remove("authors");
+            }
+            return true;
         }
-        authorsNBTList.add(author);
-
-        return true;
+        return false;
     }
 }
