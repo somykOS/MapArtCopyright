@@ -52,8 +52,7 @@ public class MapAuthorCommand {
         if(!itemStack.isOf(Items.FILLED_MAP)){
             context.getSource().sendFeedback(() -> Text.literal("You should have filled map in main hand").setStyle(style), false);
             return -1;
-        } else if (!Permissions.check(player, "mapartcopyright.addauthor") && !Permissions.check(player, "mapartcopyright.removeauthor")
-                && !isAuthor(itemStack, player)) {
+        } else if ( !(Permissions.check(player, "mapartcopyright.addauthor") || isAuthor(itemStack, player)) ) {
             context.getSource().sendFeedback(() -> Text.literal("You`re not one of the authors, who are allowed to modify this map").setStyle(style), false);
             return -1;
         }
