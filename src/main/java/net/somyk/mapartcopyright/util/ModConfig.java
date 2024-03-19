@@ -40,7 +40,7 @@ public class ModConfig {
         config.setComment("displayAuthorsLore", "Works if 'copyright' is/was 'true'. Up to 5 players can be displayed in a map lore");
         config.setComment("disableCopy", "Nobody can make a copy of a map (except authors if 'authorsCanCopy' is 'true')");
         config.setComment("authorsCanCopy", "Works if 'copyright' is/was 'true'");
-        config.setComment("authorsCanAddAuthors", "Command /mapAuthor add <player> works if it's true, and you're one of the authors");
+        config.setComment("authorsCanAddAuthors", "Authors can use `/mapAuthor add <player>` command");
         config.setComment("cleanMap", "Allows to clean a map with a bucket of water in a cartography table");
 
         try {
