@@ -24,7 +24,7 @@ public class MapAuthorCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, RegistrationEnvironment registrationEnvironment){
         dispatcher.register(literal("mapAuthor")
                 .requires(source -> ModConfig.getBooleanValue("authorsCanAddAuthors") || Permissions.check(source, "mapartcopyright.addauthor") || Permissions.check(source, "mapartcopyright.removeauthor"))
-                .then(literal("new")
+                .then(literal("add")
                         .requires(source -> ModConfig.getBooleanValue("authorsCanAddAuthors") || Permissions.check(source, "mapartcopyright.addauthor"))
                         .then(argument("player", StringArgumentType.greedyString())
                                 .executes(context -> run(context, StringArgumentType.getString(context,"player"), 1))
