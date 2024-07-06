@@ -11,7 +11,7 @@
 		"sources": "https://github.com/somykOS/Fabric-MapArtCopyright-1.20.X",
 		"discord": "somyk"
 	},
-	"license": "MIT",
+	"license": "CC-BY-NC-SA-4.0",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
