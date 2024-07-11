@@ -21,8 +21,8 @@ public class EmptyMapItemMixin {
     private ItemStack addAuthorsNBT(ItemStack original, World world, PlayerEntity player, Hand hand){
         if (!ModConfig.getBooleanValue("copyright")) return original;
 
-        setAuthorNBT(original, player);
-        setAuthorDisplayLore(original);
+        createAuthorNBT(original, player);
+        setAuthorLore(original);
 
         return original;
     }

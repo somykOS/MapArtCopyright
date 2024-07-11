@@ -1,9 +1,10 @@
 package net.somyk.mapartcopyright.mixin;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.world.World;
 import net.somyk.mapartcopyright.util.AuthorMethods;
 import net.somyk.mapartcopyright.util.ModConfig;
@@ -19,13 +20,13 @@ public class FilledMapItemMixin {
     @Inject(method = "inventoryTick", at = @At("TAIL"))
     private void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected, CallbackInfo ci){
         boolean shouldDisplayAuthorsLore = ModConfig.getBooleanValue("displayAuthorsLore");
-        boolean stackHasAuthors = !stack.getOrCreateNbt().getList("authors", NbtElement.COMPOUND_TYPE).isEmpty();
-        boolean stackHasDisplay = stack.getSubNbt("display") != null;
+        boolean stackHasAuthors = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt().contains("authors");
+        boolean stackHasLore = stack.get(DataComponentTypes.LORE) != null;
 
-        if (shouldDisplayAuthorsLore && !stackHasDisplay && stackHasAuthors) {
-            AuthorMethods.setAuthorDisplayLore(stack);
-        } else if (stackHasDisplay && (!shouldDisplayAuthorsLore || !stackHasAuthors)) {
-            stack.removeSubNbt("display");
+        if (shouldDisplayAuthorsLore && !stackHasLore && stackHasAuthors) {
+            AuthorMethods.setAuthorLore(stack);
+        } else if (stackHasLore && (!shouldDisplayAuthorsLore || !stackHasAuthors)) {
+            stack.remove(DataComponentTypes.LORE);
         }
     }
 }

@@ -19,9 +19,9 @@ public class ModConfig {
         try {
             if (!config.exists()) {
                 config.createNewFile();
-                LOGGER.info("New file has been created: " + (path2.resolve( "config.yml" ).toFile()).getPath());
+                LOGGER.info("[MapArtCopyright]: New file has been created: {}", (path2.resolve("config.yml").toFile()).getPath());
             } else {
-                LOGGER.info((path2.resolve( "config.yml" ).toFile()).getPath() + " already exists, loading configurations...");
+                LOGGER.info("[MapArtCopyright]:{} already exists, loading configurations...", (path2.resolve("config.yml").toFile()).getPath());
             }
             config.loadWithComments();
         } catch (final Exception e) {

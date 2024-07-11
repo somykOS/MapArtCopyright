@@ -70,7 +70,7 @@ public class MapAuthorCommand {
             return -1;
         }
 
-        setAuthorDisplayLore(itemStack);
+        setAuthorLore(itemStack);
 
         return 1;
     }
