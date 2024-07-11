@@ -40,6 +40,3 @@ If you only want to block map copying, you can set all `false`, except `disableC
 It's my very first mod. Special thanks for hints to LlamaLad7, [Zefir](https://modrinth.com/user/Stikulzon) and [Bawnorton](https://modrinth.com/user/Bawnorton). <br>
 If there is any issue, please visit the [GitHub page](https://github.com/somykOS/Fabric-MapArtCopyright-1.20.X/issues) and open one. <br>
 And if you need this mod for another MC version, you can open a new discussion on the [GitHub page](https://github.com/somykOS/Fabric-MapArtCopyright-1.20.X/discussions).
-***
-**License**<br>
-02.05.2024 changed from MIT to CC BY-NC-SA 4.0
