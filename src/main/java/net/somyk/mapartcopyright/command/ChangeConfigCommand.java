@@ -2,8 +2,10 @@ package net.somyk.mapartcopyright.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -14,96 +16,44 @@ import static net.somyk.mapartcopyright.MapArtCopyright.MOD_ID;
 import static net.somyk.mapartcopyright.util.ModConfig.*;
 
 public class ChangeConfigCommand {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, RegistrationEnvironment environment) {
+        LiteralCommandNode<ServerCommandSource> mapartCopyrightNode = CommandManager
+                .literal(MOD_ID)
+                .requires(Permissions.require( MOD_ID + ".changeconfig"))
+                .build();
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, RegistrationEnvironment registrationEnvironment){
-        Style style = Style.EMPTY.withColor(Formatting.GRAY).withItalic(true);
+        LiteralCommandNode<ServerCommandSource> copyrightNode = buildBooleanCommand("copyright", "copyright");
+        LiteralCommandNode<ServerCommandSource> disableCopyNode = buildBooleanCommand("disableCopy", "disableCopy");
+        LiteralCommandNode<ServerCommandSource> authorsCanCopyNode = buildBooleanCommand("authorsCanCopy", "authorsCanCopy");
+        LiteralCommandNode<ServerCommandSource> authorsCanAddAuthorsNode = buildBooleanCommand("authorsCanAddAuthors", "authorsCanAddAuthors");
+        LiteralCommandNode<ServerCommandSource> cleanMapNode = buildBooleanCommand("cleanMap", "cleanMap");
+        LiteralCommandNode<ServerCommandSource> displayAuthorsLoreNode = buildBooleanCommand("displayAuthorsLore", "displayAuthorsLore");
 
-        dispatcher.register(literal(MOD_ID)
-                .requires(Permissions.require("mapartcopyright.changeconfig"))
-                .then(literal("copyright")
+        dispatcher.getRoot().addChild(mapartCopyrightNode);
+        mapartCopyrightNode.addChild(copyrightNode);
+        mapartCopyrightNode.addChild(disableCopyNode);
+        mapartCopyrightNode.addChild(authorsCanCopyNode);
+        mapartCopyrightNode.addChild(authorsCanAddAuthorsNode);
+        mapartCopyrightNode.addChild(cleanMapNode);
+        mapartCopyrightNode.addChild(displayAuthorsLoreNode);
+    }
+
+    private static LiteralCommandNode<ServerCommandSource> buildBooleanCommand(String name, String configKey) {
+        Style style = Style.EMPTY.withColor(Formatting.GRAY);
+
+        return CommandManager
+                .literal(name)
+                .executes(context -> {
+                    context.getSource().sendFeedback(() -> Text.literal("'" + name + "' is '" + getStringValue(configKey) + "'").setStyle(style), false);
+                    return 1;
+                })
+                .then(CommandManager.argument("value", BoolArgumentType.bool())
                         .executes(context -> {
-                            context.getSource().sendFeedback(() -> Text.literal("'copyright' is '" + getStringValue("copyright") + "'").setStyle(style), false);
+                            final boolean value = BoolArgumentType.getBool(context, "value");
+                            setValue(configKey, value);
+                            context.getSource().sendFeedback(() -> Text.literal("'" + name + "' set to '" + value + "'").setStyle(style), true);
                             return 1;
-                        })
-                        .then(argument("value", BoolArgumentType.bool())
-                                .executes(context -> {
-                                    final boolean value = BoolArgumentType.getBool(context,"value");
-                                    setValue("copyright", value);
-                                    context.getSource().sendFeedback(() -> Text.literal("'copyright' set to '" + value + "'").setStyle(style), true);
-                                    return 1;
-                                })
-                        )
-                )
-                .then(literal("disableCopy")
-                        .executes(context -> {
-                            context.getSource().sendFeedback(() -> Text.literal("'disableCopy' is '" + getStringValue("disableCopy") + "'").setStyle(style), false);
-                            return 1;
-                        })
-                        .then(argument("value", BoolArgumentType.bool())
-                                .executes(context -> {
-                                    final boolean value = BoolArgumentType.getBool(context,"value");
-                                    setValue("disableCopy", value);
-                                    context.getSource().sendFeedback(() -> Text.literal("'disableCopy' set to '" + value + "'").setStyle(style), true);
-                                    return 1;
-                                })
-                        )
-                )
-                .then(literal("authorsCanCopy")
-                        .executes(context -> {
-                            context.getSource().sendFeedback(() -> Text.literal("'authorsCanCopy' is '" + getStringValue("authorsCanCopy") + "'").setStyle(style), false);
-                            return 1;
-                        })
-                        .then(argument("value", BoolArgumentType.bool())
-                                .executes(context -> {
-                                    final boolean value = BoolArgumentType.getBool(context,"value");
-                                    setValue("authorsCanCopy", value);
-                                    context.getSource().sendFeedback(() -> Text.literal("'authorsCanCopy' set to '" + value + "'").setStyle(style), true);
-                                    return 1;
-                                })
-                        )
-                )
-                .then(literal("authorsCanAddAuthors")
-                        .executes(context -> {
-                            context.getSource().sendFeedback(() -> Text.literal("'authorsCanAddAuthors' is '" + getStringValue("authorsCanAddAuthors") + "'").setStyle(style), false);
-                            return 1;
-                        })
-                        .then(argument("value", BoolArgumentType.bool())
-                                .executes(context -> {
-                                    final boolean value = BoolArgumentType.getBool(context,"value");
-                                    setValue("authorsCanAddAuthors", value);
-                                    context.getSource().sendFeedback(() -> Text.literal("'authorsCanAddAuthors' set to '" + value + "'").setStyle(style), true);
-                                    return 1;
-                                })
-                        )
-                )
-                .then(literal("cleanMap")
-                        .executes(context -> {
-                            context.getSource().sendFeedback(() -> Text.literal("'cleanMap' is '" + getStringValue("cleanMap") + "'").setStyle(style), false);
-                            return 1;
-                        })
-                        .then(argument("value", BoolArgumentType.bool())
-                                .executes(context -> {
-                                    final boolean value = BoolArgumentType.getBool(context,"value");
-                                    setValue("cleanMap", value);
-                                    context.getSource().sendFeedback(() -> Text.literal("'cleanMap' set to '" + value + "'").setStyle(style), true);
-                                    return 1;
-                                })
-                        )
-                )
-                .then(literal("displayAuthorsLore")
-                        .executes(context -> {
-                            context.getSource().sendFeedback(() -> Text.literal("'displayAuthorsLore' is '" + getStringValue("displayAuthorsLore") + "'").setStyle(style), false);
-                            return 1;
-                        })
-                        .then(argument("value", BoolArgumentType.bool())
-                                .executes(context -> {
-                                    final boolean value = BoolArgumentType.getBool(context,"value");
-                                    setValue("displayAuthorsLore", value);
-                                    context.getSource().sendFeedback(() -> Text.literal("'displayAuthorsLore' set to '" + value + "'").setStyle(style), true);
-                                    return 1;
-                                })
-                        )
-                )
-        );
+                        }))
+                .build();
     }
 }
