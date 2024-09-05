@@ -22,7 +22,6 @@ public class EmptyMapItemMixin {
         if (!ModConfig.getBooleanValue("copyright")) return original;
 
         createAuthorNBT(original, player);
-        setAuthorLore(original);
 
         return original;
     }

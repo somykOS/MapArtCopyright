@@ -4,6 +4,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.component.type.*;
@@ -13,103 +14,100 @@ import net.minecraft.util.Formatting;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static net.somyk.mapartcopyright.util.ModConfig.getBooleanValue;
 
 public class AuthorMethods {
+    public static final String AUTHORS_KEY = "authors";
+    private static final Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.GRAY).withItalic(false);
+    private static final int MAX_AUTHORS_DISPLAYED = 5;
 
-    public static boolean isAuthor(ItemStack itemStack, PlayerEntity playerEntity){
-        NbtCompound tag = itemStack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
-        NbtList authors = (NbtList) tag.get("authors");
-        if (authors == null) return false;
-        return authors.contains(NbtString.of(playerEntity.getName().getString()));
+    public static boolean isAuthor(ItemStack itemStack, PlayerEntity playerEntity) {
+        return getAuthors(itemStack)
+                .map(authors -> authors.contains(NbtString.of(playerEntity.getName().getString())))
+                .orElse(false);
     }
 
-    public static boolean canCopy(ItemStack itemStack, PlayerEntity playerEntity){
-        if(!getBooleanValue("disableCopy")){
-            return true;
-        }
-        if(getBooleanValue("authorsCanCopy")) {
-            return isAuthor(itemStack, playerEntity);
-        } else
-            return false;
+    public static boolean isMainAuthor(ItemStack itemStack, PlayerEntity playerEntity) {
+        return getAuthors(itemStack)
+                .map(authors -> !authors.isEmpty() && authors.getString(0).equals(playerEntity.getName().getString()))
+                .orElse(false);
     }
 
-    public static void createAuthorNBT(ItemStack itemStack, PlayerEntity playerEntity){
-        NbtCompound tag = itemStack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
+    public static boolean canCopy(ItemStack itemStack, PlayerEntity playerEntity) {
+        return !getBooleanValue("disableCopy") || (getBooleanValue("authorsCanCopy") && isAuthor(itemStack, playerEntity));
+    }
 
+    public static void createAuthorNBT(ItemStack itemStack, PlayerEntity playerEntity) {
+        NbtCompound tag = itemStack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
         NbtList authors = new NbtList();
         authors.add(NbtString.of(playerEntity.getName().getString()));
-
-        tag.put("authors", authors);
+        tag.put(AUTHORS_KEY, authors);
         itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(tag));
+        addLore(itemStack);
     }
 
     public static boolean modifyAuthorNBT(ItemStack itemStack, String playerName, int operation) {
         NbtCompound tag = itemStack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
-        NbtList authors = (NbtList) tag.get("authors");
-        if (authors == null) authors = new NbtList();
+        NbtList authors = tag.getList(AUTHORS_KEY, NbtElement.STRING_TYPE);
         NbtString author = NbtString.of(playerName);
 
+        boolean modified = false;
         if (operation == 1 && !authors.contains(author)) {
             authors.add(author);
-            tag.put("authors", authors);
-            itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(tag));
-            return true;
-        } else if (operation == 0 && authors.contains(author)) {
-            authors.remove(author);
-            if (!authors.isEmpty()) {
-                tag.put("authors", authors);
-            } else tag.remove("authors");
-
-            itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(tag));
-            return true;
+            modified = true;
+        } else if (operation == 0 && authors.remove(author)) {
+            modified = true;
         }
-        return false;
+
+        if (modified) {
+            if (authors.isEmpty()) {
+                tag.remove(AUTHORS_KEY);
+            } else {
+                tag.put(AUTHORS_KEY, authors);
+            }
+            itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(tag));
+            addLore(itemStack);
+        }
+
+        return modified;
     }
 
-    public static void setAuthorLore(ItemStack itemStack){
-        if(!getBooleanValue("displayAuthorsLore")) return;
-        int maxAuthors = 5;
-
-        Style LORE_STYLE = Style.EMPTY.withColor(Formatting.GRAY).withItalic(false);
-        List<Text> loreLines = new ArrayList<>();
-
+    private static Optional<NbtList> getAuthors(ItemStack itemStack) {
         NbtCompound tag = itemStack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
-        NbtList authors = (NbtList) tag.get("authors");
+        return Optional.ofNullable(tag.getList(AUTHORS_KEY, NbtElement.STRING_TYPE));
+    }
 
-        String authorName;
-        String authorName1;
+    public static void addLore(ItemStack itemStack) {
+        getAuthors(itemStack).ifPresent(authors -> {
+            if (!authors.isEmpty()) {
+                addAuthorsToLore(itemStack, authors);
+            } else itemStack.remove(DataComponentTypes.LORE);
+        });
+    }
 
-        int authorsCount = authors != null ? authors.size() : 0;
-        for (int i = 0; i < authorsCount; i += 2) {
-            String line = "";
-            if (i == 0) {
-                authorName = authors.getString(i);
-                if (i + 1 < authorsCount) {
-                    loreLines.add(Text.translatable("book.byAuthor", authorName + ",").setStyle(LORE_STYLE));
-                } else {
-                    loreLines.add(Text.translatable("book.byAuthor", authorName).setStyle(LORE_STYLE));
-                }
-                i++;
+    private static void addAuthorsToLore(ItemStack itemStack, NbtList authors) {
+        List<Text> loreLines = new ArrayList<>();
+        String firstAuthor = authors.getString(0);
+        loreLines.add(Text.translatable("book.byAuthor", firstAuthor + (authors.size() > 1 ? "," : "")).setStyle(TOOLTIP_STYLE));
+
+        StringBuilder line = new StringBuilder();
+        for (int i = 1; i < Math.min(authors.size(), MAX_AUTHORS_DISPLAYED); i++) {
+            if (!line.isEmpty()) {
+                line.append(", ");
             }
-            if (i >= maxAuthors) break;
-            if (i + 1 < authorsCount) {
-                authorName = authors.getString(i);
-                authorName1 = authors.getString(i+1);
-                line += authorName + ", " + authorName1;
-                if (i + 2 < authorsCount){
-                    if ( i + 2 != maxAuthors) line += ",";
-                    else line += "...";
-                }
-            } else {
-                authorName = authors.getString(i);
-                line += authorName;
+            line.append(authors.getString(i));
+            if (i % 2 == 0 || i == Math.min(authors.size(), MAX_AUTHORS_DISPLAYED) - 1) {
+                loreLines.add(Text.literal(line.toString()).setStyle(TOOLTIP_STYLE));
+                line.setLength(0);
             }
-            if (!line.isEmpty()) loreLines.add(Text.literal(line).setStyle(LORE_STYLE));
         }
 
-        LoreComponent lore = new LoreComponent(loreLines);
-        itemStack.set(DataComponentTypes.LORE, lore);
+        if (authors.size() > MAX_AUTHORS_DISPLAYED) {
+            loreLines.add(Text.literal("...").setStyle(TOOLTIP_STYLE));
+        }
+
+        itemStack.set(DataComponentTypes.LORE, new LoreComponent(loreLines));
     }
 }

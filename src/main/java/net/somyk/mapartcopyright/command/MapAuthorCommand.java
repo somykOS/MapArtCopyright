@@ -18,71 +18,92 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.somyk.mapartcopyright.util.ModConfig;
 
 import java.util.regex.Pattern;
 
 public class MapAuthorCommand {
+    private static final Style STYLE_SUCCESS = Style.EMPTY.withColor(Formatting.DARK_GREEN);
+    private static final Style STYLE_FAIL = Style.EMPTY.withColor(Formatting.DARK_RED);
+    private static final Pattern VALID_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9]+$");
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, RegistrationEnvironment environment) {
-        LiteralCommandNode<ServerCommandSource> mapAuthorNode = CommandManager
-                .literal("mapAuthor")
-                .requires(source -> ModConfig.getBooleanValue("authorsCanAddAuthors") ||
-                        Permissions.check(source, MOD_ID + ".addauthor") ||
-                        Permissions.check(source, MOD_ID + ".removeauthor"))
-                .build();
+        LiteralCommandNode<ServerCommandSource> mapArtNode = CommandManager.literal("map-art").build();
 
-        LiteralCommandNode<ServerCommandSource> addNode = CommandManager
-                .literal("add")
-                .requires(source -> ModConfig.getBooleanValue("authorsCanAddAuthors") ||
-                        Permissions.check(source, MOD_ID + ".addauthor"))
-                .then(CommandManager.argument("player", StringArgumentType.greedyString())
-                        .executes(context -> run(context, StringArgumentType.getString(context, "player"), 1)))
-                .build();
+        mapArtNode.addChild(buildSubCommand("add", MapAuthorCommand::add));
+        mapArtNode.addChild(buildSubCommand("remove", MapAuthorCommand::remove));
 
-        LiteralCommandNode<ServerCommandSource> removeNode = CommandManager
-                .literal("remove")
-                .requires(Permissions.require(MOD_ID + ".removeauthor"))
-                .then(CommandManager.argument("player", StringArgumentType.greedyString())
-                        .executes(context -> run(context, StringArgumentType.getString(context, "player"), 0)))
-                .build();
-
-        dispatcher.getRoot().addChild(mapAuthorNode);
-        mapAuthorNode.addChild(addNode);
-        mapAuthorNode.addChild(removeNode);
+        dispatcher.getRoot().addChild(mapArtNode);
     }
 
-    private static final Style STYLE = Style.EMPTY.withColor(Formatting.GRAY);
-    private static final Pattern PATTERN = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
+    private static LiteralCommandNode<ServerCommandSource> buildSubCommand(String name, CommandExecutor executor) {
+        return CommandManager.literal(name)
+                .then(CommandManager.argument("player", StringArgumentType.greedyString())
+                        .executes(context -> executor.execute(context, StringArgumentType.getString(context, "player"))))
+                .build();
+    }
 
-    private static int run(CommandContext<ServerCommandSource> context, String playerName, int operation) {
+    @FunctionalInterface
+    private interface CommandExecutor {
+        int execute(CommandContext<ServerCommandSource> context, String playerName);
+    }
 
+    private static int add(CommandContext<ServerCommandSource> context, String playerName) {
+        return modifyMapArt(context, playerName, true);
+    }
 
+    private static int remove(CommandContext<ServerCommandSource> context, String playerName) {
+        return modifyMapArt(context, playerName, false);
+    }
+
+    private static int modifyMapArt(CommandContext<ServerCommandSource> context, String playerName, boolean isAdding) {
         PlayerEntity player = context.getSource().getPlayer();
         if (player == null) return -1;
 
         ItemStack itemStack = player.getMainHandStack();
 
-        if (!itemStack.isOf(Items.FILLED_MAP)) {
-            context.getSource().sendFeedback(() -> Text.literal("You should have filled map in main hand").setStyle(STYLE), false);
-            return -1;
-        } else if (!(isAuthor(itemStack, player) || Permissions.check(player, MOD_ID + ".addauthor"))) {
-            context.getSource().sendFeedback(() -> Text.literal("You're not allowed to modify this map").setStyle(STYLE), false);
+        if (!isValidMapArt(itemStack)) {
+            sendFeedback(context, "You should have map art in main hand", STYLE_FAIL);
             return -1;
         }
 
-        if (PATTERN.matcher(playerName).find()) {
-            context.getSource().sendFeedback(() -> Text.literal("Player name should not have any special character").setStyle(STYLE), false);
-            return -1;
-        } else if (operation == 1 && !modifyAuthorNBT(itemStack, playerName, operation)) {
-            context.getSource().sendFeedback(() -> Text.literal("There is already the author").setStyle(STYLE), false);
-            return -1;
-        } else if (operation == 0 && !modifyAuthorNBT(itemStack, playerName, operation)) {
-            context.getSource().sendFeedback(() -> Text.literal("This author is not found").setStyle(STYLE), false);
+        if (!canModifyMapArt(player, itemStack, isAdding)) {
+            notAllowedModify(context);
             return -1;
         }
 
-        setAuthorLore(itemStack);
+        if (!VALID_NAME_PATTERN.matcher(playerName).matches()) {
+            sendFeedback(context, "Player name should not have any special character", STYLE_FAIL);
+            return -1;
+        }
+
+        boolean success = modifyAuthorNBT(itemStack, playerName, isAdding ? 1 : 0);
+        if (!success) {
+            String message = isAdding ? "There is already the author" : "This author is not found";
+            sendFeedback(context, message, STYLE_FAIL);
+            return -1;
+        }
+
+
+        String message = playerName + " successfully " + (isAdding ? "added to " : "removed from ") + "map art authors";
+        sendFeedback(context, message, STYLE_SUCCESS);
 
         return 1;
+    }
+
+    private static boolean isValidMapArt(ItemStack itemStack) {
+        return itemStack.isOf(Items.FILLED_MAP);
+    }
+
+    private static boolean canModifyMapArt(PlayerEntity player, ItemStack itemStack, boolean isAdding) {
+        String permission = isAdding ? "add-author" : "remove-author";
+        return isMainAuthor(itemStack, player) || Permissions.check(player, MOD_ID + "." + permission);
+    }
+
+    private static void sendFeedback(CommandContext<ServerCommandSource> context, String message, Style style) {
+        context.getSource().sendFeedback(() -> Text.literal(message).setStyle(style), false);
+    }
+
+    private static void notAllowedModify(CommandContext<ServerCommandSource> context) {
+        sendFeedback(context, "You're not allowed to modify this map", STYLE_FAIL);
     }
 }

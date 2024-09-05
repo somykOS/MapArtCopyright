@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MapArtCopyright implements ModInitializer {
-	public static final String MOD_ID = "mapartcopyright";
+	public static final String MOD_ID = "map-art-copyright";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override

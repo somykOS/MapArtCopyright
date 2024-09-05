@@ -8,27 +8,21 @@ Default config values:
 # Adds NBT 'authors' when creating a new filled map
 copyright: true
 
-# Works if 'copyright' is/was 'true'. Up to 5 players can be displayed in a map lore
-displayAuthorsLore: true
-
 # Nobody can make a copy of a map (except authors if 'authorsCanCopy' is 'true')
 disableCopy: false
 
 # Works if 'copyright' is/was 'true'
 authorsCanCopy: true
 
-# Authors can use `/mapAuthor add <player>` command
-authorsCanAddAuthors: true
-
 # Allows to clean a map with a bucket of water in a cartography table
 cleanMap: false
 ```
 
-You can manage config in-game with the command `/mapartcopyright <config-value> true/false`. <br>
-To use this command you need the permission `mapartcopyright.changeconfig`. <br>
-(Alternatively, you can change it manually in `config/MapArtCopyright/config.yml`)
+You can manage config in-game with the command `/map-art config <config-value> true/false`. <br>
+To use this command you need the permission `map-art-copyright.change-config`. <br>
+(Alternatively, you can change it manually in `config/mapartcopyright.yml`)
 
-To use `/mapAuthor add <player>` you need to be one of the map authors or have the `mapartcopyright.addauthor` permission, and for `/mapAuthor remove <player>` you need to have the `mapartcopyright.removeauthor` permission.<br>
+To use `/map-art add <player>` or `/map-art remove <player>` you need to be main author (the first who created filled map) or have the `map-art-copyright.add-author`, `map-art-copyright.remove-author` permissions. <br>
 
 This mod uses [fabric-permission-api](https://github.com/lucko/fabric-permissions-api/). <br>
 To manage these permission, you can use [LuckPerms](https://modrinth.com/mod/luckperms) or any other mod that can be used in this way. <br>
@@ -36,7 +30,12 @@ To manage these permission, you can use [LuckPerms](https://modrinth.com/mod/luc
 If you only want to block map copying, you can set all `false`, except `disableCopy`.<br>
 `cleanMap` enables the ability to clean a map with a bucket of water on a cartography table.
 
-***
-It's my very first mod. Special thanks for hints to LlamaLad7, [Zefir](https://modrinth.com/user/Stikulzon) and [Bawnorton](https://modrinth.com/user/Bawnorton). <br>
-If there is any issue, please visit the [GitHub page](https://github.com/somykOS/Fabric-MapArtCopyright-1.20.X/issues) and open one. <br>
-And if you need this mod for another MC version, you can open a new discussion on the [GitHub page](https://github.com/somykOS/Fabric-MapArtCopyright-1.20.X/discussions).
+---
+You can visit my little [contact card](https://somykos.github.io/web/), <br>
+And are welcome to support me via the following links:<br>
+<a href="https://ko-fi.com/somyk">
+<img src="https://raw.githubusercontent.com/somykOS/web/c03742bd86ca2ce0f6f39bcd3cfe683ad98926a2/public/external/kofi_s_logo_nolabel.svg" alt="ko-fi" width="100"/>
+</a>
+<a href="https://send.monobank.ua/jar/8RCzun35pC">
+<img src="https://raw.githubusercontent.com/somykOS/web/5ac2e685429eb0cc369dc220ce3b93d2a22893c0/public/external/monobank_logo.svg" alt="monobank" width="80"/>
+</a>

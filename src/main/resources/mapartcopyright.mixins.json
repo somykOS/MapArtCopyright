@@ -6,9 +6,9 @@
     "CartographyTableScreenHandler$4Mixin",
     "CartographyTableScreenHandler$5Mixin",
     "CartographyTableScreenHandlerMixin",
+    "CrafterBlockMixin",
     "CraftingScreenHandlerMixin",
-    "EmptyMapItemMixin",
-    "FilledMapItemMixin"
+    "EmptyMapItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

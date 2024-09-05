@@ -12,32 +12,21 @@ import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.world.World;
 import net.somyk.mapartcopyright.util.AuthorMethods;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CraftingScreenHandler.class)
 public class CraftingScreenHandlerMixin {
 
-    @Unique
-    private static PlayerEntity playerEntity;
-
-    // Extracting PlayerEntity
-    @Inject(method = "updateResult", at= @At("HEAD"))
-    private static void getPlayerEntity(ScreenHandler handler, World world, PlayerEntity player, RecipeInputInventory craftingInventory, CraftingResultInventory resultInventory, RecipeEntry<CraftingRecipe> recipe, CallbackInfo ci){
-        playerEntity = player;
-    }
-
     // Checking if a player can copy a map
     @ModifyExpressionValue(method = "updateResult", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/recipe/CraftingRecipe;craft(Lnet/minecraft/recipe/input/RecipeInput;Lnet/minecraft/registry/RegistryWrapper$WrapperLookup;)Lnet/minecraft/item/ItemStack;"))
-    private static ItemStack playerCanCopyCheck(ItemStack original){
+    private static ItemStack playerCanCopyCheck(ItemStack original, ScreenHandler handler, World world, PlayerEntity player, RecipeInputInventory craftingInventory, CraftingResultInventory resultInventory, @Nullable RecipeEntry<CraftingRecipe> recipe){
         if(original.isOf(Items.FILLED_MAP))
-            if(!AuthorMethods.canCopy(original, playerEntity)) {
-            return ItemStack.EMPTY;
-        }
+            if(!AuthorMethods.canCopy(original, player)) {
+                return ItemStack.EMPTY;
+            }
         return original;
     }
 }

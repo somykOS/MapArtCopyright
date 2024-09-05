@@ -18,24 +18,25 @@ import static net.somyk.mapartcopyright.util.ModConfig.*;
 public class ChangeConfigCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, RegistrationEnvironment environment) {
         LiteralCommandNode<ServerCommandSource> mapartCopyrightNode = CommandManager
-                .literal(MOD_ID)
-                .requires(Permissions.require( MOD_ID + ".changeconfig"))
+                .literal("map-art")
+                .build();
+
+        LiteralCommandNode<ServerCommandSource> configNode = CommandManager
+                .literal("config")
+                .requires(Permissions.require( MOD_ID + ".change-config"))
                 .build();
 
         LiteralCommandNode<ServerCommandSource> copyrightNode = buildBooleanCommand("copyright", "copyright");
         LiteralCommandNode<ServerCommandSource> disableCopyNode = buildBooleanCommand("disableCopy", "disableCopy");
         LiteralCommandNode<ServerCommandSource> authorsCanCopyNode = buildBooleanCommand("authorsCanCopy", "authorsCanCopy");
-        LiteralCommandNode<ServerCommandSource> authorsCanAddAuthorsNode = buildBooleanCommand("authorsCanAddAuthors", "authorsCanAddAuthors");
         LiteralCommandNode<ServerCommandSource> cleanMapNode = buildBooleanCommand("cleanMap", "cleanMap");
-        LiteralCommandNode<ServerCommandSource> displayAuthorsLoreNode = buildBooleanCommand("displayAuthorsLore", "displayAuthorsLore");
 
         dispatcher.getRoot().addChild(mapartCopyrightNode);
-        mapartCopyrightNode.addChild(copyrightNode);
-        mapartCopyrightNode.addChild(disableCopyNode);
-        mapartCopyrightNode.addChild(authorsCanCopyNode);
-        mapartCopyrightNode.addChild(authorsCanAddAuthorsNode);
-        mapartCopyrightNode.addChild(cleanMapNode);
-        mapartCopyrightNode.addChild(displayAuthorsLoreNode);
+        mapartCopyrightNode.addChild(configNode);
+        configNode.addChild(copyrightNode);
+        configNode.addChild(disableCopyNode);
+        configNode.addChild(authorsCanCopyNode);
+        configNode.addChild(cleanMapNode);
     }
 
     private static LiteralCommandNode<ServerCommandSource> buildBooleanCommand(String name, String configKey) {
