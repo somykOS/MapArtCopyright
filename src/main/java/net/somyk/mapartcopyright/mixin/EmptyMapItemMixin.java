@@ -6,7 +6,6 @@ import net.minecraft.item.EmptyMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import net.somyk.mapartcopyright.util.ModConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -19,8 +18,6 @@ public class EmptyMapItemMixin {
     @ModifyExpressionValue(method = "use", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/item/FilledMapItem;createMap(Lnet/minecraft/world/World;IIBZZ)Lnet/minecraft/item/ItemStack;"))
     private ItemStack addAuthorsNBT(ItemStack original, World world, PlayerEntity player, Hand hand){
-        if (!ModConfig.getBooleanValue("copyright")) return original;
-
         createAuthorNBT(original, player);
 
         return original;

@@ -1,34 +1,35 @@
 # Map art Copyright
-A small server side mod designed to note the author who created the map. Allows to disable map copying.
+Server-side mod designed to note the author who created the map. Allows to disable map copying.
 ***
 ![How copyright looks](https://cdn.modrinth.com/data/oI6kpFqG/images/06b8185f18d6da844fa0b8c1ce2ded71dc2bfbde.png)
 ***
 Default config values:
 ```yaml
-# Adds NBT 'authors' when creating a new filled map
-copyright: true
+# You can change how many of them are displayed
+maxPlayersInLore: 3
 
 # Nobody can make a copy of a map (except authors if 'authorsCanCopy' is 'true')
-disableCopy: false
-
-# Works if 'copyright' is/was 'true'
+disableCopy: true
 authorsCanCopy: true
+
+# Main author can transfer a canvas to the public domain (all players can copy the canvas).
+# Doesn't work if `disableCopy` is `false`
+publicDomainFeature: true
 
 # Allows to clean a map with a bucket of water in a cartography table
 cleanMap: false
 ```
 
-You can manage config in-game with the command `/map-art config <config-value> true/false`. <br>
+You can manage config in-game with the command `/map-art config <config-value>`. <br>
 To use this command you need the permission `map-art-copyright.change-config`. <br>
-(Alternatively, you can change it manually in `config/mapartcopyright.yml`)
+(Alternatively, you can change it manually in `config/map-art-copytight/mapartcopyright.yml`)
+Also you can change `config/map-art-copytight/lang.yml` file, which translates mod's text.
 
 To use `/map-art add <player>` or `/map-art remove <player>` you need to be main author (the first who created filled map) or have the `map-art-copyright.add-author`, `map-art-copyright.remove-author` permissions. <br>
+Also you can allow anybody to copy your art with `/map-art to-public` command. After transferring art to public domain it can also be crafted by crafter.
 
 This mod uses [fabric-permission-api](https://github.com/lucko/fabric-permissions-api/). <br>
 To manage these permission, you can use [LuckPerms](https://modrinth.com/mod/luckperms) or any other mod that can be used in this way. <br>
-
-If you only want to block map copying, you can set all `false`, except `disableCopy`.<br>
-`cleanMap` enables the ability to clean a map with a bucket of water on a cartography table.
 
 ---
 You can visit my little [contact card](https://somykos.github.io/web/), <br>
