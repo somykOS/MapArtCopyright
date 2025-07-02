@@ -6,7 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
-import static net.minecraft.server.command.CommandManager.*;
+
 import static net.somyk.mapartcopyright.MapArtCopyright.MOD_ID;
 import static net.somyk.mapartcopyright.util.AuthorMethods.*;
 import static net.somyk.mapartcopyright.util.ModConfig.*;
@@ -15,15 +15,17 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.somyk.mapartcopyright.util.AuthorMethods;
 
 import java.util.regex.Pattern;
 
-public class MapAuthorCommand {
+public class MapArtCommand {
     private static final Style STYLE_SUCCESS = Style.EMPTY.withColor(Formatting.GREEN);
     private static final Style STYLE_FAIL = Style.EMPTY.withColor(Formatting.RED);
     private static final Pattern VALID_NAME_PATTERN = Pattern.compile("^[a-z0-9_]{3,}$", Pattern.CASE_INSENSITIVE);
@@ -36,20 +38,20 @@ public class MapAuthorCommand {
                 .then(CommandManager.literal("remove")
                         .then(CommandManager.argument("player", StringArgumentType.greedyString())
                                 .executes(context -> modifyMapArt(context, StringArgumentType.getString(context, "player"), false))))
-                .then(CommandManager.literal("public-domain")
+                .then(CommandManager.literal("change-accessibility")
                         .requires(source -> getBooleanValue(publicDomain) && getBooleanValue(disableCopy))
-                        .executes(MapAuthorCommand::publicDomain))
+                        .executes(MapArtCommand::changeAccessibility))
                 .build();
 
         dispatcher.getRoot().addChild(mapArtNode);
     }
 
-    private static int publicDomain(CommandContext<ServerCommandSource> context) {
+    private static int changeAccessibility(CommandContext<ServerCommandSource> context) {
         return executeWithPlayerAndMapArt(context, (player, itemStack) -> {
             if (!isMainAuthor(itemStack, player)) {
                 return sendFeedback(context, getStringValue(messageNotAllowedToModify, LANG_CONFIG), STYLE_FAIL);
             }
-            if (toPublicDomain(itemStack)) {
+            if (AuthorMethods.changeAccessibility(itemStack)) {
                 return sendFeedback(context, getStringValue(messageAddedToPublicDomain, LANG_CONFIG), STYLE_SUCCESS);
             } else {
                 return sendFeedback(context, getStringValue(messageRemovedFromPublicDomain, LANG_CONFIG), STYLE_SUCCESS);

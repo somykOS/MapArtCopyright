@@ -3,11 +3,13 @@ package net.somyk.mapartcopyright.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.potion.Potions;
 import net.minecraft.screen.CartographyTableScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.somyk.mapartcopyright.util.AuthorMethods;
@@ -16,6 +18,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Objects;
 
 @Mixin(CartographyTableScreenHandler.class)
 public class CartographyTableScreenHandlerMixin {
@@ -39,8 +43,8 @@ public class CartographyTableScreenHandlerMixin {
 
     @WrapOperation(method = "method_17382", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/inventory/CraftingResultInventory;removeStack(I)Lnet/minecraft/item/ItemStack;"))
-    private ItemStack checkIfWaterBucket(CraftingResultInventory instance, int slot, Operation<ItemStack> original, ItemStack map, ItemStack item, ItemStack oldResult) {
-        if (item.isOf(Items.WATER_BUCKET)) {
+    private ItemStack checkIfWaterContainer(CraftingResultInventory instance, int slot, Operation<ItemStack> original, ItemStack map, ItemStack item, ItemStack oldResult) {
+        if (item.isOf(Items.WATER_BUCKET) || Objects.equals(item.getComponents(), PotionContentsComponent.createStack(Items.POTION, Potions.WATER).getComponents())) {
             instance.setStack(slot, Items.MAP.getDefaultStack());
             return null;
         } else {

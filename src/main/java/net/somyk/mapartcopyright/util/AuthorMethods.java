@@ -4,7 +4,6 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.component.type.*;
@@ -31,7 +30,7 @@ public class AuthorMethods {
 
     public static boolean isMainAuthor(ItemStack itemStack, PlayerEntity playerEntity) {
         return getAuthors(itemStack)
-                .map(authors -> !authors.isEmpty() && authors.getString(0).equals(playerEntity.getName().getString()))
+                .map(authors -> !authors.isEmpty() && authors.getString(0).orElse("").equals(playerEntity.getName().getString()))
                 .orElse(false);
     }
 
@@ -39,21 +38,23 @@ public class AuthorMethods {
         if (!getBooleanValue(disableCopy)) return true;
 
         NbtCompound tag = getCustomData(itemStack);
-        if (tag.getBoolean(PUBLIC_KEY)) return true;
+        Optional<Boolean> bl = tag.getBoolean(PUBLIC_KEY);
+        if (bl.isPresent() && bl.get()) return true;
 
         return getBooleanValue(authorsCopy) && playerEntity != null && isAuthor(itemStack, playerEntity);
     }
 
-    public static boolean toPublicDomain(ItemStack itemStack) {
+    public static boolean isPublic(ItemStack itemStack) {
         NbtCompound tag = getCustomData(itemStack);
-        if(tag.contains(PUBLIC_KEY)) {
-            tag.putBoolean(PUBLIC_KEY, !tag.getBoolean(PUBLIC_KEY));
-        } else {
-            tag.putBoolean(PUBLIC_KEY, true);
-        }
+        return tag.getBoolean(PUBLIC_KEY, false);
+    }
+
+    public static boolean changeAccessibility(ItemStack itemStack) {
+        NbtCompound tag = getCustomData(itemStack);
+        tag.putBoolean(PUBLIC_KEY, !isPublic(itemStack));
         itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(tag));
         addLore(itemStack);
-        return tag.getBoolean(PUBLIC_KEY);
+        return isPublic(itemStack);
     }
 
     public static void createAuthorNBT(ItemStack itemStack, PlayerEntity playerEntity) {
@@ -67,7 +68,8 @@ public class AuthorMethods {
 
     public static boolean modifyAuthorNBT(ItemStack itemStack, String playerName, int operation) {
         NbtCompound tag = getCustomData(itemStack);
-        NbtList authors = tag.getList(AUTHORS_KEY, NbtElement.STRING_TYPE);
+        Optional<NbtList> optAuthors = tag.getList(AUTHORS_KEY);
+        NbtList authors = optAuthors.orElseGet(NbtList::new);
 
         int index = findAuthorIndex(authors, playerName);
 
@@ -96,7 +98,8 @@ public class AuthorMethods {
         });
 
         NbtCompound tag = getCustomData(itemStack);
-        if (tag.getBoolean(PUBLIC_KEY)) {
+        Optional<Boolean> bl = tag.getBoolean(PUBLIC_KEY);
+        if (bl.isPresent() && bl.get()) {
             //LoreComponent lore = (LoreComponent) itemStack.getOrDefault(DataComponentTypes.LORE, NbtComponent.DEFAULT);
             LoreComponent lore = itemStack.getComponents().get(DataComponentTypes.LORE);
             if(lore == null) lore = new LoreComponent(new ArrayList<>());
@@ -113,7 +116,7 @@ public class AuthorMethods {
 
     private static Optional<NbtList> getAuthors(ItemStack itemStack) {
         NbtCompound tag = getCustomData(itemStack);
-        return Optional.ofNullable(tag.getList(AUTHORS_KEY, NbtElement.STRING_TYPE));
+        return tag.getList(AUTHORS_KEY);
     }
 
     public static NbtCompound getCustomData(ItemStack itemStack) {
@@ -124,14 +127,14 @@ public class AuthorMethods {
         int maxPlayers = getIntValue(maxPlayerLore);
         int authorCount = Math.min(authors.size(), maxPlayers);
         List<Text> loreLines = new ArrayList<>();
-        loreLines.add(Text.translatable("book.byAuthor", authors.getString(0) + (authorCount > 1 ? "," : "")).setStyle(TOOLTIP_STYLE));
+        loreLines.add(Text.translatable("book.byAuthor", authors.getString(0).orElse("") + (authorCount > 1 ? "," : "")).setStyle(TOOLTIP_STYLE));
         StringBuilder line;
 
         for (int i = 1; i < authorCount; i += 2) {
-            line = new StringBuilder(authors.getString(i));
+            line = new StringBuilder(authors.getString(i).orElse(""));
 
             if (i + 1 < authorCount && i + 1 < authors.size()) {
-                line.append(", ").append(authors.getString(i + 1));
+                line.append(", ").append(authors.getString(i + 1).orElse(""));
                 if (i + 2 < authorCount && i + 2 < authors.size()) line.append(",");
                 else if (i + 2 >= authorCount && i + 2 < authors.size()) line.append("...");
             } else if (i + 1 >= authorCount && i + 1 < authors.size()) line.append("...");
@@ -144,7 +147,7 @@ public class AuthorMethods {
 
     private static int findAuthorIndex(NbtList authors, String playerName) {
         for (int i = 0; i < authors.size(); i++) {
-            if (authors.getString(i).equalsIgnoreCase(playerName)) {
+            if (authors.getString(i).orElse("").equalsIgnoreCase(playerName)) {
                 return i;
             }
         }

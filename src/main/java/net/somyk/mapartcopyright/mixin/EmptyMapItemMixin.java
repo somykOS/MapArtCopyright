@@ -16,7 +16,7 @@ public class EmptyMapItemMixin {
 
     // Adding 'authors' NBT and Lore while creating a filled map item
     @ModifyExpressionValue(method = "use", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/item/FilledMapItem;createMap(Lnet/minecraft/world/World;IIBZZ)Lnet/minecraft/item/ItemStack;"))
+            target = "Lnet/minecraft/item/FilledMapItem;createMap(Lnet/minecraft/server/world/ServerWorld;IIBZZ)Lnet/minecraft/item/ItemStack;"))
     private ItemStack addAuthorsNBT(ItemStack original, World world, PlayerEntity player, Hand hand){
         createAuthorNBT(original, player);
 

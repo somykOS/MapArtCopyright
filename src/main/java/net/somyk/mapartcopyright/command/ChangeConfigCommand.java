@@ -9,6 +9,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -16,7 +17,6 @@ import net.minecraft.util.Formatting;
 
 import java.util.function.Function;
 
-import static net.minecraft.server.command.CommandManager.*;
 import static net.somyk.mapartcopyright.MapArtCopyright.MOD_ID;
 import static net.somyk.mapartcopyright.util.ModConfig.*;
 

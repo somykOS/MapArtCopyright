@@ -49,17 +49,17 @@ public class ModConfig {
         try {
             if (!config.exists()) {
                 config.createNewFile();
-                LOGGER.info("[{}]: config has been created: {}", MOD_ID, configFilePath.toFile().getPath());
+                LOGGER.info("Сonfig has been created: {}", configFilePath.toFile().getPath());
             } else {
-                LOGGER.info("[{}]: loaded config", MOD_ID);
+                LOGGER.info("Loaded config");
             }
             config.loadWithComments();
 
             if (!lang.exists()) {
                 lang.createNewFile();
-                LOGGER.info("[{}]: lang file has been created: {}", MOD_ID, langFilePath.toFile().getPath());
+                LOGGER.info("Lang file has been created: {}", langFilePath.toFile().getPath());
             } else {
-                LOGGER.info("[{}]: loaded lang file", MOD_ID);
+                LOGGER.info("Loaded lang file");
             }
             lang.loadWithComments();
 

@@ -26,7 +26,7 @@ To use this command you need the permission `map-art-copyright.change-config`. <
 Also you can change `config/map-art-copytight/lang.yml` file, which translates mod's text.
 
 To use `/map-art add <player>` or `/map-art remove <player>` you need to be main author (the first who created filled map) or have the `map-art-copyright.add-author`, `map-art-copyright.remove-author` permissions. <br>
-Also you can allow anybody to copy your art with `/map-art to-public` command. After transferring art to public domain it can also be crafted by crafter.
+Also you can allow anybody to copy your art with `/map-art change-accessibility` command. After transferring art to public domain it can also be crafted by crafter. You can use the command again to remove your art from public domain.
 
 This mod uses [fabric-permission-api](https://github.com/lucko/fabric-permissions-api/). <br>
 To manage these permission, you can use [LuckPerms](https://modrinth.com/mod/luckperms) or any other mod that can be used in this way. <br>
