@@ -16,14 +16,14 @@ authorsCanCopy: true
 # Doesn't work if `disableCopy` is `false`
 publicDomainFeature: true
 
-# Allows to clean a map with a bucket of water in a cartography table
+# Allows to clean a map with a bucket or a bottle of water in a cartography table
 cleanMap: false
 ```
 
 You can manage config in-game with the command `/map-art config <config-value>`. <br>
 To use this command you need the permission `map-art-copyright.change-config`. <br>
-(Alternatively, you can change it manually in `config/map-art-copytight/mapartcopyright.yml`)
-Also you can change `config/map-art-copytight/lang.yml` file, which translates mod's text.
+(Alternatively, you can change it manually in `config/map-art-copyright/map-art-copyright.yml`)
+Also you can change `config/map-art-copyright/lang.yml` file, which translates mod's text.
 
 To use `/map-art add <player>` or `/map-art remove <player>` you need to be main author (the first who created filled map) or have the `map-art-copyright.add-author`, `map-art-copyright.remove-author` permissions. <br>
 Also you can allow anybody to copy your art with `/map-art change-accessibility` command. After transferring art to public domain it can also be crafted by crafter. You can use the command again to remove your art from public domain.
