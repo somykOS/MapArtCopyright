@@ -78,7 +78,7 @@ public class ModConfig {
         config.setComment(disableCopy, "Nobody can make a copy of a map (except authors if 'authorsCanCopy' is 'true')");
         config.setComment(publicDomain, "Main author can transfer a canvas to the public domain (all players can copy the canvas).\n" +
                 "Doesn't work if `disableCopy` is `false`");
-        config.setComment(cleanMap, "Allows to clean a map with a bucket of water in a cartography table");
+        config.setComment(cleanMap, "Allows to clean a map with a bucket or a bottle of water in a cartography table");
 
         lang.addDefault(messageConfigValue, "'%s' currently is '%s'");
         lang.addDefault(messageConfigValueUpdated, "'%s' updated to '%s'");
